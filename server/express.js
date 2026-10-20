@@ -29,6 +29,10 @@ app.use('/', contactRoutes)
 app.use('/', projectRoutes)
 app.use('/', qualificationRoutes)
 
+app.get('/demo-video', (req, res) => {
+  res.redirect('https://youtu.be/F2SvqvDiZy4')
+})
+
 // Serve the built React client in production (after `npm run build`)
 const clientDist = path.join(__dirname, '../client/dist')
 if (fs.existsSync(clientDist)) {
