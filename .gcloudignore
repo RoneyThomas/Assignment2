@@ -1,0 +1,12 @@
+node_modules
+client/node_modules
+client/dist
+.env
+.env.*
+!.env.example
+.git
+.gitignore
+*.md
+*.postman_collection.json
+.DS_Store
+.gcloudignore
