@@ -3,7 +3,8 @@ import errorHandler from '../helpers/dbErrorHandler.js'
 
 // POST /api/users  (sign up)
 const create = async (req, res) => {
-  const user = new User(req.body)
+  const { role, ...body } = req.body // everyone signs up as a regular 'user'
+  const user = new User(body)
   try {
     await user.save()
     return res.status(201).json({ message: 'Successfully signed up!' })
@@ -15,7 +16,7 @@ const create = async (req, res) => {
 // GET /api/users
 const list = async (req, res) => {
   try {
-    const users = await User.find().select('name email created updated')
+    const users = await User.find().select('name email role created updated')
     res.json(users)
   } catch (err) {
     return res.status(400).json({ error: errorHandler.getErrorMessage(err) })
@@ -45,7 +46,12 @@ const read = (req, res) => res.json(strip(req.profile))
 // PUT /api/users/:userId
 const update = async (req, res) => {
   try {
-    const user = Object.assign(req.profile, req.body)
+    const { role, ...body } = req.body
+    // Only an admin can change roles, and an admin can't demote themselves
+    if (role !== undefined && req.auth.role === 'admin' && req.profile._id.toString() !== req.auth._id) {
+      body.role = role
+    }
+    const user = Object.assign(req.profile, body)
     user.updated = Date.now()
     await user.save()
     res.json(strip(user))

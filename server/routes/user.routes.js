@@ -4,13 +4,15 @@ import authCtrl from '../controllers/auth.controller.js'
 
 const router = express.Router()
 
+// Anyone can sign up; only the admin can list or delete all users
 router.route('/api/users')
-  .get(userCtrl.list)
+  .get(authCtrl.requireSignin, authCtrl.isAdmin, userCtrl.list)
   .post(userCtrl.create)
-  .delete(authCtrl.requireSignin, userCtrl.removeAll)
+  .delete(authCtrl.requireSignin, authCtrl.isAdmin, userCtrl.removeAll)
 
+// A user can read/update/delete their own account; the admin can do it for any account
 router.route('/api/users/:userId')
-  .get(authCtrl.requireSignin, userCtrl.read)
+  .get(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.read)
   .put(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.update)
   .delete(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.remove)
 

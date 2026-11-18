@@ -9,6 +9,9 @@ import Contact from './pages/Contact.jsx'
 import Signup from './pages/Signup.jsx'
 import Signin from './pages/Signin.jsx'
 import Messages from './pages/Messages.jsx'
+import Users from './pages/Users.jsx'
+import Profile from './pages/Profile.jsx'
+import NotFound from './pages/NotFound.jsx'
 
 export default function App() {
   return (
@@ -21,14 +24,10 @@ export default function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
-        <Route
-          path="/messages"
-          element={
-            <PrivateRoute>
-              <Messages />
-            </PrivateRoute>
-          }
-        />
+        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+        <Route path="/messages" element={<PrivateRoute adminOnly><Messages /></PrivateRoute>} />
+        <Route path="/users" element={<PrivateRoute adminOnly><Users /></PrivateRoute>} />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   )

@@ -74,7 +74,7 @@ h2 { margin-top: 32px; }
   background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px;
 }
 .form h2 { margin: 0; }
-.row { display: flex; gap: 12px; flex-wrap: wrap; }
+.row { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
 .row > * { flex: 1 1 180px; }
 input, textarea {
   font: inherit; padding: 10px 12px; border-radius: 8px;
@@ -96,3 +96,21 @@ button.danger { color: var(--danger); }
 .table { width: 100%; border-collapse: collapse; margin-top: 24px; background: var(--surface); }
 .table th, .table td { text-align: left; padding: 10px; border-bottom: 1px solid var(--border); }
 @media (max-width: 600px) { .table { display: block; overflow-x: auto; } }
+
+/* Assignment 3 additions */
+.section-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.badge {
+  display: inline-block; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+  padding: 1px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); vertical-align: middle;
+}
+.badge.admin { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+.field { display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; color: var(--muted); }
+.field input { color: var(--text); font-size: 1rem; }
+.card.editing { outline: 2px solid var(--accent); }
+.table-wrap { overflow-x: auto; }
+.table td.actions { margin-top: 0; }
+.table input { padding: 6px 8px; }
+select {
+  font: inherit; padding: 6px 8px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--bg); color: var(--text);
+}

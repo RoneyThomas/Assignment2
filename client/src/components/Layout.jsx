@@ -1,19 +1,12 @@
-import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom'
-import auth from '../api/auth.js'
-import { signout } from '../api/api.js'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext.jsx'
 
 export default function Layout() {
   const navigate = useNavigate()
-  useLocation() // re-render the nav on route change so the auth links stay current
-  const jwt = auth.isAuthenticated()
+  const { user, isSignedIn, isAdmin, signout } = useAuth()
 
   const handleSignout = async () => {
-    auth.clearJWT()
-    try {
-      await signout()
-    } catch {
-      /* the token is already cleared locally */
-    }
+    await signout()
     navigate('/')
   }
 
@@ -29,12 +22,18 @@ export default function Layout() {
           <NavLink to="/projects">Projects</NavLink>
           <NavLink to="/education">Education</NavLink>
           <NavLink to="/contact">Contact</NavLink>
-          {jwt ? (
+          {isAdmin && (
             <>
               <NavLink to="/messages">Messages</NavLink>
-              <button className="link" onClick={handleSignout}>
-                Sign out ({jwt.user.name})
-              </button>
+              <NavLink to="/users">Users</NavLink>
+            </>
+          )}
+          {isSignedIn ? (
+            <>
+              <NavLink to="/profile">
+                {user.name} <span className={`badge ${user.role}`}>{user.role}</span>
+              </NavLink>
+              <button className="link" onClick={handleSignout}>Sign out</button>
             </>
           ) : (
             <>

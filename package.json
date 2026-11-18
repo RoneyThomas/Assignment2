@@ -1,7 +1,7 @@
 {
   "name": "myportfolio",
   "version": "1.0.0",
-  "description": "COMP229 Assignment 2 - Portfolio REST API (Node, Express, MongoDB)",
+  "description": "COMP229 Assignments 2 & 3 - Full stack portfolio (React, Node, Express, MongoDB)",
   "type": "module",
   "main": "server.js",
   "scripts": {

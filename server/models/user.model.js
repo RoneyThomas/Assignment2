@@ -20,6 +20,13 @@ const UserSchema = new mongoose.Schema({
     required: 'Password is required',
   },
   salt: String,
+  // 'admin' can create/update/delete everything; 'user' can only view.
+  // Sign up always creates a 'user' - the admin account is set directly in MongoDB.
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+  },
   created: {
     type: Date,
     default: Date.now,

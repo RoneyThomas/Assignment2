@@ -1,4 +1,5 @@
-// Creates the Portfolio collections with some sample data (only inserts into empty collections).
+// Creates the admin account and the Portfolio collections with some sample data
+// (sample data is only inserted into empty collections).
 // Run with: npm run seed
 import mongoose from 'mongoose'
 import config from '../config/config.js'
@@ -7,16 +8,27 @@ import Contact from './models/contact.model.js'
 import Project from './models/project.model.js'
 import Qualification from './models/qualification.model.js'
 
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@portfolio.com'
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'password123'
+
 const owner = { firstname: 'Roney', lastname: 'Thomas', email: 'roneythomas6@gmail.com' }
 
 const seed = async () => {
   await mongoose.connect(config.mongoUri, { dbName: 'Portfolio' })
   console.log('Connected to the database!')
 
-  if ((await User.countDocuments()) === 0) {
-    await new User({ name: 'Admin', email: 'admin@portfolio.com', password: 'password123' }).save()
-    console.log('users: created admin@portfolio.com / password123')
+  // The admin account is hardcoded here - sign up can only ever create regular users
+  const admin = await User.findOne({ email: ADMIN_EMAIL })
+  if (!admin) {
+    await new User({ name: 'Admin', email: ADMIN_EMAIL, password: ADMIN_PASSWORD, role: 'admin' }).save()
+    console.log(`users: created admin ${ADMIN_EMAIL}`)
+  } else if (admin.role !== 'admin') {
+    admin.role = 'admin'
+    await admin.save()
+    console.log(`users: gave ${ADMIN_EMAIL} the admin role`)
   }
+  // Older user documents created before roles existed become regular users
+  await User.updateMany({ role: { $exists: false } }, { $set: { role: 'user' } })
   if ((await Contact.countDocuments()) === 0) {
     await Contact.create({ firstname: 'Jane', lastname: 'Doe', email: 'jane.doe@example.com' })
     console.log('contacts: created 1 document')

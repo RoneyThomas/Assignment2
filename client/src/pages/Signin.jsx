@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { signin } from '../api/api.js'
-import auth from '../api/auth.js'
+import { useAuth } from '../context/AuthContext.jsx'
 
 export default function Signin() {
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const navigate = useNavigate()
   const location = useLocation()
+  const { signin: saveSession } = useAuth()
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
@@ -15,7 +16,7 @@ export default function Signin() {
     e.preventDefault()
     try {
       const data = await signin(form)
-      auth.authenticate(data)
+      saveSession(data)
       navigate(location.state?.from?.pathname || '/', { replace: true })
     } catch (err) {
       setError(err.message)

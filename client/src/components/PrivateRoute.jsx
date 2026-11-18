@@ -1,10 +1,21 @@
 import { Navigate, useLocation } from 'react-router-dom'
-import auth from '../api/auth.js'
+import { useAuth } from '../context/AuthContext.jsx'
 
-export default function PrivateRoute({ children }) {
+// Redirects to sign in when nobody is signed in; with adminOnly, non-admins see a message
+export default function PrivateRoute({ children, adminOnly = false }) {
+  const { isSignedIn, isAdmin } = useAuth()
   const location = useLocation()
-  if (!auth.isAuthenticated()) {
+
+  if (!isSignedIn) {
     return <Navigate to="/signin" replace state={{ from: location }} />
+  }
+  if (adminOnly && !isAdmin) {
+    return (
+      <section>
+        <h1>Admins only</h1>
+        <p className="lead">You need an admin account to view this page.</p>
+      </section>
+    )
   }
   return children
 }
